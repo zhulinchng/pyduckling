@@ -1,81 +1,42 @@
 # PyDuckling
-[![Project License - MIT](https://img.shields.io/pypi/l/pyduckling-native.svg)](https://raw.githubusercontent.com/treble-ai/pyduckling-native/master/LICENSE)
-[![pypi version](https://img.shields.io/pypi/v/pyduckling-native.svg)](https://pypi.org/project/pyduckling-native/)
-[![conda version](https://img.shields.io/conda/vn/treble-ai/pyduckling.svg)](https://www.anaconda.com/download/)
-[![download count](https://img.shields.io/conda/dn/treble-ai/pyduckling.svg)](https://www.anaconda.com/download/)
-[![Downloads](https://pepy.tech/badge/pyduckling-native)](https://pepy.tech/project/pyduckling-native)
-[![PyPI status](https://img.shields.io/pypi/status/pyduckling-native.svg)](https://github.com/treble-ai/pyduckling-native)
-![Linux Tests](https://github.com/treble-ai/pyduckling/workflows/Linux%20Tests/badge.svg?branch=master)
-![Mac Tests](https://github.com/treble-ai/pyduckling/workflows/Mac%20Tests/badge.svg?branch=master)
+[![Project License - MIT](https://img.shields.io/pypi/l/pyduckling-native.svg)](https://raw.githubusercontent.com/phihos/pyduckling-native/master/LICENSE)
+[![pypi version](https://img.shields.io/pypi/v/pyduckling-native-phihos.svg)](https://pypi.org/project/pyduckling-native-phihos/)
+[![Downloads](https://pepy.tech/badge/pyduckling-native-phihos)](https://pepy.tech/project/pyduckling-native-phihos)
+[![PyPI status](https://img.shields.io/pypi/status/pyduckling-native-phihos.svg)](https://github.com/phihos/pyduckling-native)
+![Linux Tests](https://github.com/phihos/pyduckling/workflows/build/badge.svg?branch=master)
 
 *Copyright © 2020– Treble.ai*
+
+> ℹ️ This is a fork of the original pyduckling-native library. There are differences to the original:
+> * Build against the latest version of [Duckling](https://github.com/facebook/duckling)
+> * Supported Python versions range from 3.8 to 3.12
+> * x86_64 Linux only, but contributions welcome if you dare to take on the challenge
 
 ## Overview
 This package provides native bindings for Facebook's [Duckling](https://github.com/facebook/duckling) in Python. This package supports all dimensions and languages available on the original library, and it does not require to spawn a Haskell server and does not use HTTP to call the Duckling API.
 
-**Note:** This package is completely Haskell-less
+> ℹ️ This package is completely Haskell-less
 
 ## Installing
 To install pyduckling, you can use both conda and pip package managers:
 
 ```bash
 # Using pip
-pip install pyduckling-native
-
-# Using conda
-conda install pyduckling -c treble-ai
+pip install pyduckling-native-phihos
 ```
 
-**Notes:** Right now, we only provide package distributions for Linux (x86_64). We will provide Windows and Mac distributions on the next release
+> ℹ️ Right now, we only provide package distributions for Linux (x86_64).
 
 
-## Dependencies
-To compile pyduckling, you will require the latest nightly release of [Rust](https://rustup.rs/), alongside [Cargo](https://crates.io/). Also, it requires a Python distribution with its corresponding development headers. Finally, this project depends on the following Cargo crates:
+## Version Matrix
 
-* [PyO3](https://github.com/PyO3/pyo3): Library used to produce Python bindings from Rust code.
-* [Maturin](https://github.com/PyO3/maturin): Build system to build and publish Rust-based Python packages
+The following table shows which PyDuckling version corresponds to which Duckling version
 
-Additionally, this package depends on [Duckling-FFI](https://github.com/treble-ai/duckling-ffi), used to compile the native interface to Duckling on Haskell. In order to compile Duckling-FFI, you will require the [Stack](https://haskell-lang.org/get-started) Haskell manager.
-
-
-## Installing locally
-Besides Rust and Stack, you will require the latest version of maturin installed to compile this project locally:
-
-```bash
-pip install maturin toml
-```
-
-First, you will need to compile Duckling-FFI in order to produce the shared library ``libducklingffi``, to do so, you can use the git submodule found at the root of this repository:
-
-```bash
-cd duckling-ffi
-stack build
-```
-
-Then, you will need to move the resulting binary ``libducklingffi.so`` to the ``ext_lib`` folder:
-
-```bash
-cp duckling-ffi/libducklingffi.so ext_lib
-```
-
-After completing this procedure, it is possible to execute the following command to compile pyduckling:
-
-```bash
-maturin develop
-```
-
-In order to produce wheels, ``maturin build`` can be used instead. This project supports [PEP517](https://www.python.org/dev/peps/pep-0517/), thus pip can be used to install this package as well:
-
-```bash
-pip install -U .
-```
-
-## Running tests
-We use pytest to run tests as it follows (after calling ``maturin develop``):
-
-```bash
-pytest -v duckling/tests
-```
+| PyDuckling         | Duckling                                                          |
+|--------------------|-------------------------------------------------------------------|
+| 0.2.0 (unreleased) | v0.2.0.0 (commit [7520daa](https://github.com/facebook/duckling)) |
+|                    |                                                                   |
+|                    |                                                                   |
 
 ## Package usage
 PyDuckling provides access to the parsing capabilities of Duckling used to extract structured data from text.
@@ -85,6 +46,8 @@ PyDuckling provides access to the parsing capabilities of Duckling used to extra
 from duckling import (load_time_zones, parse_ref_time,
                       parse_lang, default_locale_lang, parse_locale,
                       parse_dimensions, parse, Context)
+# Install with pip install pendulum
+import pendulum
 
 # Load reference time for time parsing
 time_zones = load_time_zones("/usr/share/zoneinfo")
@@ -110,7 +73,7 @@ valid_dimensions = ["amount-of-money", "credit-card-number", "distance",
 output_dims = parse_dimensions(valid_dimensions)
 
 # Parse a phrase
-result = parse('En dos semanas', context, dims, False)
+result = parse('En dos semanas', context, output_dims, False)
 ```
 
 This wrapper allows access to all the dimensions and languages available on Duckling:
@@ -131,9 +94,82 @@ This wrapper allows access to all the dimensions and languages available on Duck
 | `url` | "https://api.wit.ai/message?q=hi" | `{"value":"https://api.wit.ai/message?q=hi","domain":"api.wit.ai"}` |
 | `volume` | "4 gallons" | `{"value":4,"type":"value","unit":"gallon"}` |
 
+## Dependencies
+To compile pyduckling, you will require the latest nightly release of [Rust](https://rustup.rs/), alongside [Cargo](https://crates.io/). Also, it requires a Python distribution with its corresponding development headers. Finally, this project depends on the following Cargo crates:
+
+* [PyO3](https://github.com/PyO3/pyo3): Library used to produce Python bindings from Rust code.
+* [Maturin](https://github.com/PyO3/maturin): Build system to build and publish Rust-based Python packages
+
+Additionally, this package depends on [Duckling-FFI](https://github.com/treble-ai/duckling-ffi), used to compile the native interface to Duckling on Haskell. In order to compile Duckling-FFI, you will require the [Stack](https://haskell-lang.org/get-started) Haskell manager.
+
+
+## Installing locally
+
+### Via Docker
+
+The only thing you need is a running [Docker](https://docs.docker.com/engine/install/) daemon 
+and permission to run `docker build` and `docker run`.
+Then just run 
+```shell
+./build.sh
+```
+
+All build dependencies are already installed in container images. The build script will get them and start 
+containers for building the Haskell lib and the Python lib. The directories `.cache`, `duckling-ffi/.stack-work` 
+and `target` will appear. The first two are for accelerating future builds and the last one will contain your final
+build result.
+
+After the `build.sh` completed successfully, you can find wheel files (binary distributions of the library) inside `target/wheels`.
+The Python version (e.g. Python 3.11 = `cp311`), the libc variant 
+(`manylinux` or `musllinux`, if you are unsure you probably need manylinux) and the CPU architecture 
+(currently only `x86_64`) are encoded in the file name. Just pick the file matching to your system and install it with:
+
+```shell
+pip install -U target/wheels/<myfile>.whl
+```
+
+### Manually
+
+Besides Rust and Stack, you will require the latest version of maturin installed to compile this project locally:
+
+```bash
+pip install maturin toml
+```
+
+First, you will need to compile Duckling-FFI in order to produce the shared library ``libducklingffi``, to do so, you can use the git submodule found at the root of this repository:
+
+```bash
+cd duckling-ffi
+stack build
+```
+
+Then, you will need to move the resulting binary ``libducklingffi.a`` to the ``ext_lib`` folder:
+
+```bash
+cp duckling-ffi/libducklingffi.a ext_lib
+```
+
+After completing this procedure, it is possible to execute the following command to compile pyduckling:
+
+```bash
+maturin develop
+```
+
+In order to produce wheels, ``maturin build`` can be used instead. This project supports [PEP517](https://www.python.org/dev/peps/pep-0517/), thus pip can be used to install this package as well:
+
+```bash
+pip install -U .
+```
+
+## Running tests
+We use pytest to run tests as it follows (after calling ``maturin develop``):
+
+```bash
+pytest -v duckling/tests
+```
 
 ## Changelog
-Please see our [CHANGELOG](https://github.com/treble-ai/pyduckling/blob/master/CHANGELOG.md) file to learn more about our new features and improvements.
+Please see our [CHANGELOG](https://github.com/phihos/pyduckling/blob/master/CHANGELOG.md) file to learn more about our new features and improvements.
 
 
 ## Contribution guidelines

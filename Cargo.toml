@@ -1,6 +1,6 @@
 [package]
-name = "pyduckling-native"
-version = "0.1.1-dev0"
+name = "pyduckling-native-phihos"
+version = "0.1.1-dev2"
 authors = ["Edgar Andrés Margffoy Tuay <andfoy@gmail.com>"]
 description = "Rust-based Python wrapper for duckling library in Haskell."
 repository = "https://github.com/treble-ai/pyduckling"
@@ -19,17 +19,5 @@ crate-type = ["cdylib"]
 libc = "0.2"
 
 [dependencies.pyo3]
-version = "0.10.1"
+version = "0.20.0"
 features = ["extension-module"]
-
-[package.metadata.maturin]
-requires-dist = ["pendulum"]
-classifier = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.5",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8"
-]
