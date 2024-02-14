@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.2.0](https://github.com/phihos/pyduckling/tree/v0.2.0) (2024-02-14)
+
+[Full Changelog](https://github.com/phihos/pyduckling/compare/v0.1.0...v0.2.0)
+
+**Merged pull requests:**
+
+- Fix badges in README.md [\#2](https://github.com/phihos/pyduckling/pull/2) ([phihos](https://github.com/phihos))
+- Initial fork of PyDuckling built against the latest version of Meta's Duckling [\#1](https://github.com/phihos/pyduckling/pull/1) ([phihos](https://github.com/phihos))
+
 ## v0.1.0 (2020/09/03)
 
 ### Issues Closed
