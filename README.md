@@ -32,9 +32,10 @@ pip install pyduckling-native-phihos
 
 The following table shows which PyDuckling version corresponds to which Duckling version
 
-| PyDuckling | Duckling                                                          |
-|------------|-------------------------------------------------------------------|
-| 0.2.0      | v0.2.0.0 (commit [7520daa](https://github.com/facebook/duckling)) |
+| PyDuckling         | Duckling                                                          |
+|--------------------|-------------------------------------------------------------------|
+| 0.2.0              | v0.2.0.0 (commit [7520daa](https://github.com/facebook/duckling)) |
+| 0.2.1 (unreleased) | v0.2.0.0 (commit [7520daa](https://github.com/facebook/duckling)) |
 
 ## Package usage
 PyDuckling provides access to the parsing capabilities of Duckling used to extract structured data from text.

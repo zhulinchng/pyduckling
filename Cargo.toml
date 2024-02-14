@@ -1,6 +1,6 @@
 [package]
 name = "pyduckling-native-phihos"
-version = "0.2.0"
+version = "0.3.0-dev0"
 authors = ["Edgar Andrés Margffoy Tuay <andfoy@gmail.com>", "Philipp Hossner <philipp.hossner@posteo.de>"]
 description = "Rust-based Python wrapper for duckling library in Haskell."
 repository = "https://github.com/phihos/pyduckling"
