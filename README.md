@@ -2,8 +2,8 @@
 [![Project License - MIT](https://img.shields.io/pypi/l/pyduckling-native.svg)](https://raw.githubusercontent.com/phihos/pyduckling-native/master/LICENSE)
 [![pypi version](https://img.shields.io/pypi/v/pyduckling-native-phihos.svg)](https://pypi.org/project/pyduckling-native-phihos/)
 [![Downloads](https://pepy.tech/badge/pyduckling-native-phihos)](https://pepy.tech/project/pyduckling-native-phihos)
-[![PyPI status](https://img.shields.io/pypi/status/pyduckling-native-phihos.svg)](https://github.com/phihos/pyduckling-native)
-![Linux Tests](https://github.com/phihos/pyduckling/workflows/build/badge.svg?branch=master)
+[![PyPI status](https://img.shields.io/pypi/status/pyduckling-native-phihos.svg)](https://github.com/phihos/pyduckling)
+![Linux Tests](https://github.com/phihos/pyduckling/actions/workflows/build.yml/badge.svg?branch=master)
 
 *Copyright © 2020– Treble.ai*
 
