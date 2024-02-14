@@ -6,7 +6,7 @@ To release a new version of pyduckling:
    docker run -it --rm \
      -v "$(pwd)":/usr/local/src/your-app \
      githubchangeloggenerator/github-changelog-generator \
-     -u phihos -p pyduckling --future-release <release version>
+     -u phihos -p pyduckling --future-release v<release version>
    ```
 4. git add -A && git commit -m "Update Changelog"
 5. Update release version in ``Cargo.toml`` (set release version, remove 'dev0')
