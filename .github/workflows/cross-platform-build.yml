@@ -38,15 +38,16 @@ jobs:
           libgmp-dev \
           pkg-config \
           curl \
-          git
-          
+          git \
+          ghc
+
+    - name: Install Haskell Stack
+      run: |
+        curl -sSL https://get.haskellstack.org/ | sh
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
-      
-    # - name: Install Haskell Stack
-    #   run: |
-    #     curl -sSL https://get.haskellstack.org/ | sh
-    #     echo "$HOME/.local/bin" >> $GITHUB_PATH
         
     - name: Cache Stack dependencies
       uses: actions/cache@v4
@@ -72,8 +73,20 @@ jobs:
     - name: Build Duckling FFI
       run: |
         cd duckling-ffi
-        stack config set system-ghc --global true
-        stack build --no-install-ghc --system-ghc --allow-different-user
+        # Try to use system GHC first, fallback to installing Stack's GHC if needed
+        if command -v ghc >/dev/null 2>&1; then
+          echo "Using system GHC"
+          stack config set system-ghc --global true
+          stack build --system-ghc --allow-different-user || {
+            echo "System GHC failed, installing Stack's GHC..."
+            stack setup
+            stack build --allow-different-user
+          }
+        else
+          echo "No system GHC found, installing Stack's GHC..."
+          stack setup
+          stack build --allow-different-user
+        fi
         cp libducklingffi.a ../ext_lib/
         
     - name: Install Python dependencies
@@ -228,6 +241,8 @@ jobs:
         if [[ "$RUNNER_OS" == "Linux" ]]; then
           curl -sSL https://get.haskellstack.org/ | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          # Also install system GHC for better compatibility
+          sudo apt-get install -y ghc
         else
           brew install haskell-stack ghc
         fi
