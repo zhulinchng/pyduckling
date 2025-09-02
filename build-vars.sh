@@ -7,7 +7,7 @@ export CABAL_VERSION=3.2.0.0
 export ALPINE_VERSION_DUCKLING_FFI=3.12
 export ALPINE_VERSION_PYDUCKLING=3.19
 export MATURIN_VERSION=1.4.0
-export IMAGE_PREFIX="ghcr.io/phihos/pyduckling"
+export IMAGE_PREFIX="ghcr.io/zhulinchng/pyduckling"
 export BUILD_IMAGE_DUCKLING_FFI=$IMAGE_PREFIX/duckling-ffi-build:alpine-${ALPINE_VERSION_DUCKLING_FFI}-ghc-${GHC_VERSION}-cabal-${CABAL_VERSION}
 export BUILD_IMAGE_PYDUCKLING=$IMAGE_PREFIX/pyduckling-build:alpine-${ALPINE_VERSION_PYDUCKLING}-maturin-${MATURIN_VERSION}
 

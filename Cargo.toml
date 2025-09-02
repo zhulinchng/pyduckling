@@ -1,9 +1,9 @@
 [package]
-name = "pyduckling-native-phihos"
+name = "pyduckling-native-zhulinchng"
 version = "0.3.0-dev0"
 authors = ["Edgar Andrés Margffoy Tuay <andfoy@gmail.com>", "Philipp Hossner <philipp.hossner@posteo.de>"]
 description = "Rust-based Python wrapper for duckling library in Haskell."
-repository = "https://github.com/phihos/pyduckling"
+repository = "https://github.com/zhulinchng/pyduckling"
 license = "MIT"
 keywords = ["haskell", "python", "parse", "duckling"]
 readme = "README.md"
@@ -17,7 +17,16 @@ crate-type = ["cdylib"]
 
 [dependencies]
 libc = "0.2"
+regex = { version = "1.10", optional = true }
 
 [dependencies.pyo3]
 version = "0.20.0"
 features = ["extension-module"]
+
+[build-dependencies]
+pkg-config = "0.3"
+
+[features]
+default = ["system-pcre"]
+system-pcre = []
+rust-regex = ["regex"]

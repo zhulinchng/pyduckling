@@ -1,0 +1,262 @@
+name: Cross-Platform Build and Test
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+  release:
+    types: [ published ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-linux:
+    name: Build Linux Wheels
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          libpcre3-dev \
+          libgmp-dev \
+          pkg-config \
+          curl \
+          git
+          
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      
+    - name: Install Haskell Stack
+      run: |
+        curl -sSL https://get.haskellstack.org/ | sh
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Cache Stack dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.stack
+          duckling-ffi/.stack-work
+        key: ${{ runner.os }}-stack-${{ hashFiles('duckling-ffi/stack.yaml.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-
+          
+    - name: Cache Cargo dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+          
+    - name: Build Duckling FFI
+      run: |
+        cd duckling-ffi
+        stack build --no-install-ghc --system-ghc --allow-different-user
+        cp libducklingffi.a ../ext_lib/
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install maturin pytest pytest-cov pendulum
+        
+    - name: Build Python package
+      run: |
+        maturin develop --release
+        
+    - name: Run tests
+      run: |
+        pytest -v duckling/tests/
+        
+    - name: Build wheel
+      if: github.event_name == 'release'
+      run: |
+        maturin build --release --out dist/
+        
+    - name: Upload wheels
+      if: github.event_name == 'release'
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-wheels-py${{ matrix.python-version }}
+        path: dist/*.whl
+
+  build-macos:
+    name: Build macOS Wheels
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install Homebrew dependencies
+      run: |
+        brew install pcre gmp pkg-config haskell-stack ghc
+        
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      
+    - name: Set environment variables
+      run: |
+        echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+        if [[ "$(uname -m)" == "arm64" ]]; then
+          echo "LIBRARY_PATH=/opt/homebrew/lib:$LIBRARY_PATH" >> $GITHUB_ENV
+          echo "CPATH=/opt/homebrew/include:$CPATH" >> $GITHUB_ENV
+        else
+          echo "LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH" >> $GITHUB_ENV
+          echo "CPATH=/usr/local/include:$CPATH" >> $GITHUB_ENV
+        fi
+        
+    - name: Cache Stack dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.stack
+          duckling-ffi/.stack-work
+        key: ${{ runner.os }}-stack-${{ hashFiles('duckling-ffi/stack.yaml.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-
+          
+    - name: Cache Cargo dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+          
+    - name: Build Duckling FFI
+      run: |
+        cd duckling-ffi
+        stack build --no-install-ghc --system-ghc --allow-different-user
+        cp libducklingffi.a ../ext_lib/
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install maturin pytest pytest-cov pendulum
+        
+    - name: Build Python package
+      run: |
+        maturin develop --release
+        
+    - name: Run tests
+      run: |
+        pytest -v duckling/tests/
+        
+    - name: Build wheel
+      if: github.event_name == 'release'
+      run: |
+        maturin build --release --out dist/
+        
+    - name: Upload wheels
+      if: github.event_name == 'release'
+      uses: actions/upload-artifact@v3
+      with:
+        name: macos-wheels-py${{ matrix.python-version }}
+        path: dist/*.whl
+
+  test-cross-platform:
+    name: Test Cross-Platform Compatibility
+    needs: [build-linux, build-macos]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.9', '3.11']
+        
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libpcre3-dev libgmp-dev pkg-config
+        
+    - name: Install system dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install pcre gmp pkg-config
+        
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      
+    - name: Install Haskell Stack
+      run: |
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
+          curl -sSL https://get.haskellstack.org/ | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        else
+          brew install haskell-stack ghc
+        fi
+        
+    - name: Test build script
+      run: |
+        if [[ "$RUNNER_OS" == "macOS" ]]; then
+          ./build-macos.sh
+        else
+          echo "Linux build testing would use Docker - skipping for now"
+        fi
+
+  publish:
+    name: Publish to PyPI
+    if: github.event_name == 'release'
+    needs: [build-linux, build-macos, test-cross-platform]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download all wheels
+      uses: actions/download-artifact@v3
+      with:
+        path: dist/
+        
+    - name: Flatten wheel directory
+      run: |
+        find dist/ -name "*.whl" -exec mv {} dist/ \;
+        find dist/ -type d -empty -delete
+        ls -la dist/
+        
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        packages_dir: dist/
