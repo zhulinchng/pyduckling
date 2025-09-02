@@ -43,8 +43,12 @@ jobs:
 
     - name: Install Haskell Stack
       run: |
-        curl -sSL https://get.haskellstack.org/ | sh
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        if ! command -v stack >/dev/null 2>&1; then
+          curl -sSL https://get.haskellstack.org/ | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        else
+          echo "Stack already installed at $(which stack)"
+        fi
 
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
@@ -173,8 +177,20 @@ jobs:
     - name: Build Duckling FFI
       run: |
         cd duckling-ffi
-        stack config set system-ghc --global true
-        stack build --no-install-ghc --system-ghc --allow-different-user --force-dirty
+        # Try to use system GHC first, fallback to installing Stack's GHC if needed
+        if command -v ghc >/dev/null 2>&1; then
+          echo "Using system GHC"
+          stack config set system-ghc --global true
+          stack build --system-ghc --allow-different-user --force-dirty || {
+            echo "System GHC failed, installing Stack's GHC..."
+            stack setup
+            stack build --allow-different-user --force-dirty
+          }
+        else
+          echo "No system GHC found, installing Stack's GHC..."
+          stack setup
+          stack build --allow-different-user --force-dirty
+        fi
         cp libducklingffi.a ../ext_lib/libducklingffi.a
         echo "Static library built and copied to ext_lib/"
         
@@ -239,8 +255,12 @@ jobs:
     - name: Install Haskell Stack
       run: |
         if [[ "$RUNNER_OS" == "Linux" ]]; then
-          curl -sSL https://get.haskellstack.org/ | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          if ! command -v stack >/dev/null 2>&1; then
+            curl -sSL https://get.haskellstack.org/ | sh
+            echo "$HOME/.local/bin" >> $GITHUB_PATH
+          else
+            echo "Stack already installed at $(which stack)"
+          fi
           # Also install system GHC for better compatibility
           sudo apt-get install -y ghc
         else
