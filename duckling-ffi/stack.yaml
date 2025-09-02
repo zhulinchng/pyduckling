@@ -6,10 +6,18 @@ extra-deps:
   - regex-posix-clib-2.7
   - dependent-sum-0.7.1.0@sha256:0e419237f5b86da3659772afff9cab355c0f8d5b3fdb15a5b30e673d8dc83941,2147
   - constraints-extras-0.3.1.0@sha256:c70fcf437e1d640cfd50a8eda1db47a64e49c96857e08fd0d8c438327d908ac1,1846
+  - Cabal-3.16.0.0@sha256:7d5d80355ac02c42cb90ec575d83653139a2054ab9aac0753527ced8f343c6b3,14024
+  - directory-1.3.9.0@sha256:2490137bb7738bd79392959458ef5f276219ea5ba8a9a56d3e0b06315c1bb917,3307
+  - filepath-1.5.4.0@sha256:1497c2630af2dd41397905ff0dff79f842bd80a139d7c5bfba3789fc3caef02c,5144
+  - process-1.6.26.1@sha256:6def2e07c317f52f4d30c43e92f97b7bc5f7c27cb1270d386b15dce429e1180f,2947
+  - unix-2.8.7.0@sha256:da731114a8ec7106c76c7d96c2b02f1b4963cb12e360a2029f4248e22a327375,10266
+  - Cabal-syntax-3.16.0.0@sha256:6a35036763557301876c5b7a448de4f1cb54fe1e223ff6c4c0c1fdd6df635a65,7509
+  - file-io-0.1.5@sha256:1d68a81fa684d006b1ec73836cebe3de9a54688836915fe3e56a20389846bb4e,3309
+  - os-string-2.0.8@sha256:d8b0f9cc3c7efb14c9924699322c8f151f30a65e8845bdf53bd344af47452344,3298
 resolver: lts-16.31
-allow-newer: false
+allow-newer: true
 install-ghc: false
 system-ghc: true
-skip-ghc-check: false
+skip-ghc-check: true
 ghc-options:
   "$everything": -fPIC

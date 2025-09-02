@@ -26,7 +26,7 @@ if ! command_exists brew; then
     exit 1
 fi
 
-if ! command_exists rust; then
+if ! command_exists rustc; then
     echo "Error: Rust is required but not installed."
     echo "Please install Rust from https://rustup.rs/"
     exit 1
