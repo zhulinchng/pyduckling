@@ -77,6 +77,10 @@ jobs:
     - name: Build Duckling FFI
       run: |
         cd duckling-ffi
+        # Set up environment for Haskell runtime libraries
+        export LD_LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+        export LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
+
         # Try to use system GHC first, fallback to installing Stack's GHC if needed
         if command -v ghc >/dev/null 2>&1; then
           echo "Using system GHC"
@@ -84,14 +88,18 @@ jobs:
           stack build --system-ghc --allow-different-user || {
             echo "System GHC failed, installing Stack's GHC..."
             stack setup
+            export LD_LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+            export LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
             stack build --allow-different-user
           }
         else
           echo "No system GHC found, installing Stack's GHC..."
           stack setup
+          export LD_LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+          export LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
           stack build --allow-different-user
         fi
-        cp libducklingffi.a ../ext_lib/
+        find . -name "libducklingffi.a" -exec cp {} ../ext_lib/ \;
         
     - name: Install Python dependencies
       run: |
@@ -177,6 +185,10 @@ jobs:
     - name: Build Duckling FFI
       run: |
         cd duckling-ffi
+        # Set up environment for Haskell runtime libraries
+        export LD_LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+        export LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
+
         # Try to use system GHC first, fallback to installing Stack's GHC if needed
         if command -v ghc >/dev/null 2>&1; then
           echo "Using system GHC"
@@ -184,14 +196,18 @@ jobs:
           stack build --system-ghc --allow-different-user --force-dirty || {
             echo "System GHC failed, installing Stack's GHC..."
             stack setup
+            export LD_LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+            export LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
             stack build --allow-different-user --force-dirty
           }
         else
           echo "No system GHC found, installing Stack's GHC..."
           stack setup
+          export LD_LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+          export LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
           stack build --allow-different-user --force-dirty
         fi
-        cp libducklingffi.a ../ext_lib/libducklingffi.a
+        find . -name "libducklingffi.a" -exec cp {} ../ext_lib/libducklingffi.a \;
         echo "Static library built and copied to ext_lib/"
         
     - name: Install Python dependencies
