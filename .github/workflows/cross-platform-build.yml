@@ -118,9 +118,21 @@ jobs:
           echo "libducklingffi.a not found, checking for alternatives..."
           find ../ext_lib/ -name "*.a" -exec echo "Found: {}" \;
           # If no static library found, this might indicate the build failed
-          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0.a" ]; then
+          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ] && [ ! -f "../ext_lib/liba.a" ]; then
             echo "ERROR: No static library found! Haskell build may have failed."
             exit 1
+          else
+            echo "SUCCESS: Found Haskell static library!"
+            # Create a symlink or copy with the expected name for Rust linking
+            if [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ]; then
+              HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.a" | head -1)
+              echo "Found Haskell library: $HASKELL_LIB"
+              ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.a
+              echo "Created symlink: libducklingffi.a -> $(basename "$HASKELL_LIB")"
+            elif [ -f "../ext_lib/liba.a" ]; then
+              echo "Found liba.a, copying to expected name..."
+              cp ../ext_lib/liba.a ../ext_lib/libducklingffi.a
+            fi
           fi
         fi
         
@@ -253,9 +265,21 @@ jobs:
           echo "libducklingffi.a not found, checking for alternatives..."
           find ../ext_lib/ -name "*.a" -exec echo "Found: {}" \;
           # If no static library found, this might indicate the build failed
-          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0.a" ]; then
+          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ] && [ ! -f "../ext_lib/liba.a" ]; then
             echo "ERROR: No static library found! Haskell build may have failed."
             exit 1
+          else
+            echo "SUCCESS: Found Haskell static library!"
+            # Create a symlink or copy with the expected name for Rust linking
+            if [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ]; then
+              HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.a" | head -1)
+              echo "Found Haskell library: $HASKELL_LIB"
+              ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.a
+              echo "Created symlink: libducklingffi.a -> $(basename "$HASKELL_LIB")"
+            elif [ -f "../ext_lib/liba.a" ]; then
+              echo "Found liba.a, copying to expected name..."
+              cp ../ext_lib/liba.a ../ext_lib/libducklingffi.a
+            fi
           fi
         fi
         
