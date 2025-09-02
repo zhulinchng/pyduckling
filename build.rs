@@ -5,19 +5,8 @@ fn main() {
     let dir_path = env::current_dir().unwrap();
     let path = dir_path.to_str().unwrap();
     
-    // Link the dynamic duckling FFI library (cross-platform)
-    let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap_or_else(|_| "unknown".to_string());
-    match target_os.as_str() {
-        "macos" => {
-            println!("cargo:rustc-link-lib=dylib=ducklingffi");
-        }
-        "linux" => {
-            println!("cargo:rustc-link-lib=dylib=ducklingffi");
-        }
-        _ => {
-            println!("cargo:rustc-link-lib=dylib=ducklingffi");
-        }
-    }
+    // Link the static duckling FFI library (built with -dynamic-too for PIC compatibility)
+    println!("cargo:rustc-link-lib=static=ducklingffi");
     println!("cargo:rustc-link-search=native={}/ext_lib/", path);
 
     // Try to link Haskell runtime using pkg-config
