@@ -17,3 +17,6 @@ system-ghc: false
 skip-ghc-check: false
 ghc-options:
   "$everything": -fPIC
+# Ensure library paths are available for FFI linking
+extra-lib-dirs: []
+extra-include-dirs: []
