@@ -39,7 +39,10 @@ jobs:
           pkg-config \
           curl \
           git \
-          ghc
+          ghc \
+          libghc-regex-compat-dev \
+          libghc-syb-dev \
+          libghc-old-locale-dev
 
     - name: Install Haskell Stack
       run: |
@@ -145,11 +148,19 @@ jobs:
       run: |
         python -m venv venv
         source venv/bin/activate
+        # Ensure Haskell runtime libraries are available
+        export LD_LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+        export LD_LIBRARY_PATH="/usr/lib/ghc-9.4.8/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+        export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
         maturin develop --release
-        
+
     - name: Run tests
       run: |
         source venv/bin/activate
+        # Ensure Haskell runtime libraries are available for testing
+        export LD_LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LD_LIBRARY_PATH"
+        export LD_LIBRARY_PATH="/usr/lib/ghc-9.4.8/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+        export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
         pytest -v duckling/tests/
         
     - name: Build wheel
@@ -292,11 +303,19 @@ jobs:
       run: |
         python -m venv venv
         source venv/bin/activate
+        # Ensure Haskell runtime libraries are available
+        export DYLD_LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$DYLD_LIBRARY_PATH"
+        export DYLD_LIBRARY_PATH="/opt/homebrew/lib/ghc-9.4.8:$DYLD_LIBRARY_PATH"
+        export DYLD_LIBRARY_PATH="/usr/local/lib/ghc-9.4.8:$DYLD_LIBRARY_PATH"
         maturin develop --release
-        
+
     - name: Run tests
       run: |
         source venv/bin/activate
+        # Ensure Haskell runtime libraries are available for testing
+        export DYLD_LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$DYLD_LIBRARY_PATH"
+        export DYLD_LIBRARY_PATH="/opt/homebrew/lib/ghc-9.4.8:$DYLD_LIBRARY_PATH"
+        export DYLD_LIBRARY_PATH="/usr/local/lib/ghc-9.4.8:$DYLD_LIBRARY_PATH"
         pytest -v duckling/tests/
         
     - name: Build wheel
