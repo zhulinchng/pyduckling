@@ -43,10 +43,10 @@ jobs:
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       
-    - name: Install Haskell Stack
-      run: |
-        curl -sSL https://get.haskellstack.org/ | sh
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    # - name: Install Haskell Stack
+    #   run: |
+    #     curl -sSL https://get.haskellstack.org/ | sh
+    #     echo "$HOME/.local/bin" >> $GITHUB_PATH
         
     - name: Cache Stack dependencies
       uses: actions/cache@v4
@@ -159,8 +159,9 @@ jobs:
     - name: Build Duckling FFI
       run: |
         cd duckling-ffi
-        stack build --no-install-ghc --system-ghc --allow-different-user
-        cp libducklingffi.a ../ext_lib/
+        stack build --no-install-ghc --system-ghc --allow-different-user --force-dirty
+        cp libducklingffi.a ../ext_lib/libducklingffi.a
+        echo "Static library built and copied to ext_lib/"
         
     - name: Install Python dependencies
       run: |
