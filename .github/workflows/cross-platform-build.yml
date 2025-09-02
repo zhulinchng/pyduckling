@@ -102,38 +102,33 @@ jobs:
         # Debug: List all files produced by the build
         echo "Files in duckling-ffi directory after build:"
         find . -type f -name "*.a" -o -name "*duckling*" -o -name "*lib*" | head -20
-        # Find and copy the static library with more robust search
-        find . -name "*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
-        # Also try to find any duckling-related static libraries
-        find . -name "*duckling*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
+        # Find and copy the dynamic library with robust search
+        find . -name "*.so" -o -name "*.dylib" -o -name "*duckling*" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
         # Also check for any library files that might be in subdirectories
-        find . -name "*.a" -type f -exec echo "Found library: {}" \; 2>/dev/null || true
+        find . -name "*.so" -o -name "*.dylib" -type f -exec echo "Found library: {}" \; 2>/dev/null || true
         # List what we found
         echo "Contents of ext_lib after copy:"
         ls -la ../ext_lib/
         # Ensure the expected library name exists
-        if [ -f "../ext_lib/libducklingffi.a" ]; then
-          echo "Found libducklingffi.a"
-        else
-          echo "libducklingffi.a not found, checking for alternatives..."
-          find ../ext_lib/ -name "*.a" -exec echo "Found: {}" \;
-          # If no static library found, this might indicate the build failed
-          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ] && [ ! -f "../ext_lib/liba.a" ]; then
-            echo "ERROR: No static library found! Haskell build may have failed."
-            exit 1
-          else
-            echo "SUCCESS: Found Haskell static library!"
-            # Create a symlink or copy with the expected name for Rust linking
-            if [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ]; then
-              HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.a" | head -1)
-              echo "Found Haskell library: $HASKELL_LIB"
-              ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.a
-              echo "Created symlink: libducklingffi.a -> $(basename "$HASKELL_LIB")"
-            elif [ -f "../ext_lib/liba.a" ]; then
-              echo "Found liba.a, copying to expected name..."
-              cp ../ext_lib/liba.a ../ext_lib/libducklingffi.a
-            fi
+        if [ -f "../ext_lib/libducklingffi.so" ] || [ -f "../ext_lib/libducklingffi.dylib" ] || [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.so" ] || [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.dylib" ]; then
+          echo "SUCCESS: Found Haskell dynamic library!"
+          # Create a symlink with the expected name for Rust linking if needed
+          if [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.so" ]; then
+            HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.so" | head -1)
+            echo "Found Haskell library: $HASKELL_LIB"
+            ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.so
+            echo "Created symlink: libducklingffi.so -> $(basename "$HASKELL_LIB")"
+          elif [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.dylib" ]; then
+            HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.dylib" | head -1)
+            echo "Found Haskell library: $HASKELL_LIB"
+            ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.dylib
+            echo "Created symlink: libducklingffi.dylib -> $(basename "$HASKELL_LIB")"
           fi
+        else
+          echo "ERROR: No dynamic library found! Haskell build may have failed."
+          echo "Looking for any library files..."
+          find ../ext_lib/ -name "*.*" -type f -exec echo "Found file: {}" \;
+          exit 1
         fi
         
     - name: Install Python dependencies
@@ -248,39 +243,34 @@ jobs:
         fi
         # Debug: List all files produced by the build
         echo "Files in duckling-ffi directory after build:"
-        find . -type f -name "*.a" -o -name "*duckling*" -o -name "*lib*" | head -20
-        # Find and copy the static library with more robust search
-        find . -name "*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
-        # Also try to find any duckling-related static libraries
-        find . -name "*duckling*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
+        find . -type f -name "*.so" -o -name "*.dylib" -o -name "*duckling*" -o -name "*lib*" | head -20
+        # Find and copy the dynamic library with robust search
+        find . -name "*.so" -o -name "*.dylib" -o -name "*duckling*" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
         # Also check for any library files that might be in subdirectories
-        find . -name "*.a" -type f -exec echo "Found library: {}" \; 2>/dev/null || true
+        find . -name "*.so" -o -name "*.dylib" -type f -exec echo "Found library: {}" \; 2>/dev/null || true
         # List what we found
         echo "Contents of ext_lib after copy:"
         ls -la ../ext_lib/
         # Ensure the expected library name exists
-        if [ -f "../ext_lib/libducklingffi.a" ]; then
-          echo "Found libducklingffi.a"
-        else
-          echo "libducklingffi.a not found, checking for alternatives..."
-          find ../ext_lib/ -name "*.a" -exec echo "Found: {}" \;
-          # If no static library found, this might indicate the build failed
-          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ] && [ ! -f "../ext_lib/liba.a" ]; then
-            echo "ERROR: No static library found! Haskell build may have failed."
-            exit 1
-          else
-            echo "SUCCESS: Found Haskell static library!"
-            # Create a symlink or copy with the expected name for Rust linking
-            if [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.a" ]; then
-              HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.a" | head -1)
-              echo "Found Haskell library: $HASKELL_LIB"
-              ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.a
-              echo "Created symlink: libducklingffi.a -> $(basename "$HASKELL_LIB")"
-            elif [ -f "../ext_lib/liba.a" ]; then
-              echo "Found liba.a, copying to expected name..."
-              cp ../ext_lib/liba.a ../ext_lib/libducklingffi.a
-            fi
+        if [ -f "../ext_lib/libducklingffi.so" ] || [ -f "../ext_lib/libducklingffi.dylib" ] || [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.so" ] || [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.dylib" ]; then
+          echo "SUCCESS: Found Haskell dynamic library!"
+          # Create a symlink with the expected name for Rust linking if needed
+          if [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.so" ]; then
+            HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.so" | head -1)
+            echo "Found Haskell library: $HASKELL_LIB"
+            ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.so
+            echo "Created symlink: libducklingffi.so -> $(basename "$HASKELL_LIB")"
+          elif [ -f "../ext_lib/libHSduckling-ffi-0.1.0.0*.dylib" ]; then
+            HASKELL_LIB=$(find ../ext_lib/ -name "libHSduckling-ffi-0.1.0.0*.dylib" | head -1)
+            echo "Found Haskell library: $HASKELL_LIB"
+            ln -sf "$(basename "$HASKELL_LIB")" ../ext_lib/libducklingffi.dylib
+            echo "Created symlink: libducklingffi.dylib -> $(basename "$HASKELL_LIB")"
           fi
+        else
+          echo "ERROR: No dynamic library found! Haskell build may have failed."
+          echo "Looking for any library files..."
+          find ../ext_lib/ -name "*.*" -type f -exec echo "Found file: {}" \;
+          exit 1
         fi
         
     - name: Install Python dependencies

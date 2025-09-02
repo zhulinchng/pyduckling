@@ -32,8 +32,8 @@ library
                      , timezone-series
                      , filepath
   default-language:    Haskell2010
-  -- Static library build flags
-  ghc-options: -staticlib -fPIC
+  -- Build flags for FFI library
+  ghc-options: -fPIC -dynamic
   -- Dynamic compilation library
   -- ghc-options: -dynamic -fPIC -no-hs-main -shared -o libducklingffi.so
   other-extensions: ForeignFunctionInterface

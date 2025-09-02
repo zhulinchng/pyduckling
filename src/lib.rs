@@ -42,6 +42,7 @@ extern "C" {
         dimensions: *mut HaskellValue,
         with_latent: u8,
     ) -> *const c_char;
+
     pub fn wparseDimensions(n: i32, dimensions: *const *const c_char) -> *mut HaskellValue;
     pub fn wparseLocale(
         locale: *const c_char,
