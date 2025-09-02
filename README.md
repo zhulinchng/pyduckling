@@ -51,7 +51,7 @@ from duckling import (load_time_zones, parse_ref_time,
 import pendulum
 
 # Load reference time for time parsing
-time_zones = load_time_zones("/usr/share/zoneinfo")
+time_zones = load_time_zones("/usr/share/zoneinfo") # "/var/db/timezone/zoneinfo" for MacOS
 bog_now = pendulum.now('America/Bogota').replace(microsecond=0)
 ref_time = parse_ref_time(
     time_zones, 'America/Bogota', bog_now.int_timestamp)

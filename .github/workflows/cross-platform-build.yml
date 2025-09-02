@@ -99,7 +99,30 @@ jobs:
           export LIBRARY_PATH="$HOME/.stack/programs/x86_64-linux/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
           stack build --allow-different-user
         fi
-        find . -name "libducklingffi.a" -exec cp {} ../ext_lib/ \;
+        # Debug: List all files produced by the build
+        echo "Files in duckling-ffi directory after build:"
+        find . -type f -name "*.a" -o -name "*duckling*" -o -name "*lib*" | head -20
+        # Find and copy the static library with more robust search
+        find . -name "*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
+        # Also try to find any duckling-related static libraries
+        find . -name "*duckling*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
+        # Also check for any library files that might be in subdirectories
+        find . -name "*.a" -type f -exec echo "Found library: {}" \; 2>/dev/null || true
+        # List what we found
+        echo "Contents of ext_lib after copy:"
+        ls -la ../ext_lib/
+        # Ensure the expected library name exists
+        if [ -f "../ext_lib/libducklingffi.a" ]; then
+          echo "Found libducklingffi.a"
+        else
+          echo "libducklingffi.a not found, checking for alternatives..."
+          find ../ext_lib/ -name "*.a" -exec echo "Found: {}" \;
+          # If no static library found, this might indicate the build failed
+          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0.a" ]; then
+            echo "ERROR: No static library found! Haskell build may have failed."
+            exit 1
+          fi
+        fi
         
     - name: Install Python dependencies
       run: |
@@ -211,8 +234,30 @@ jobs:
           export LIBRARY_PATH="$HOME/.stack/programs/aarch64-osx/ghc-9.4.8/lib/ghc-9.4.8:$LIBRARY_PATH"
           stack build --allow-different-user --force-dirty
         fi
-        find . -name "libducklingffi.a" -exec cp {} ../ext_lib/libducklingffi.a \;
-        echo "Static library built and copied to ext_lib/"
+        # Debug: List all files produced by the build
+        echo "Files in duckling-ffi directory after build:"
+        find . -type f -name "*.a" -o -name "*duckling*" -o -name "*lib*" | head -20
+        # Find and copy the static library with more robust search
+        find . -name "*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
+        # Also try to find any duckling-related static libraries
+        find . -name "*duckling*.a" -type f -exec cp {} ../ext_lib/ \; 2>/dev/null || true
+        # Also check for any library files that might be in subdirectories
+        find . -name "*.a" -type f -exec echo "Found library: {}" \; 2>/dev/null || true
+        # List what we found
+        echo "Contents of ext_lib after copy:"
+        ls -la ../ext_lib/
+        # Ensure the expected library name exists
+        if [ -f "../ext_lib/libducklingffi.a" ]; then
+          echo "Found libducklingffi.a"
+        else
+          echo "libducklingffi.a not found, checking for alternatives..."
+          find ../ext_lib/ -name "*.a" -exec echo "Found: {}" \;
+          # If no static library found, this might indicate the build failed
+          if [ ! -f "../ext_lib/libducklingffi.a" ] && [ ! -f "../ext_lib/libHSduckling-ffi-0.1.0.0.a" ]; then
+            echo "ERROR: No static library found! Haskell build may have failed."
+            exit 1
+          fi
+        fi
         
     - name: Install Python dependencies
       run: |
