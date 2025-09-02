@@ -5,15 +5,15 @@
 
 packages:
 - completed:
-    commit: 7520daaeba28691cda8e1b5c3d946028a28fb64b
+    commit: 2c226585af5b9f4985d9c7151d7191603bb2add7
     git: https://github.com/facebook/duckling.git
     name: duckling
     pantry-tree:
-      sha256: 5e1e7c97425977cf9d7811b845cb80484dac2b420906923949603fd996f2fb18
+      sha256: 061efc3ceee6b477c486e8e1698a8542d4a84982c93f6905fe909dd1ec57c822
       size: 77724
-    version: 0.2.0.0
+    version: 0.2.0.1
   original:
-    commit: 7520daaeba28691cda8e1b5c3d946028a28fb64b
+    commit: 2c226585af5b9f4985d9c7151d7191603bb2add7
     git: https://github.com/facebook/duckling.git
 - completed:
     hackage: regex-posix-clib-2.7@sha256:998fca06da3d719818f0691ef0b8b9b7375afeea228cb08bd9e2db53f96b0cd7,1232
@@ -30,50 +30,43 @@ packages:
   original:
     hackage: dependent-sum-0.7.1.0@sha256:0e419237f5b86da3659772afff9cab355c0f8d5b3fdb15a5b30e673d8dc83941,2147
 - completed:
-    hackage: constraints-extras-0.3.1.0@sha256:c70fcf437e1d640cfd50a8eda1db47a64e49c96857e08fd0d8c438327d908ac1,1846
+    hackage: snap-core-1.0.5.1@sha256:0c2f6cbdf2ce5ebb7916444a2a421b185693732e4276a87e07dea40c552a8569,9820
     pantry-tree:
-      sha256: f29920355b21ef7a7218573591aa740b01b3d1fb3b0bbd66e2f726d091d56fb2
-      size: 595
+      sha256: 5922b3a2c46715dd191d37f35cebf698bd42f6aa091c4576982576fc5c0f0224
+      size: 3429
   original:
-    hackage: constraints-extras-0.3.1.0@sha256:c70fcf437e1d640cfd50a8eda1db47a64e49c96857e08fd0d8c438327d908ac1,1846
+    hackage: snap-core-1.0.5.1@sha256:0c2f6cbdf2ce5ebb7916444a2a421b185693732e4276a87e07dea40c552a8569,9820
 - completed:
-    hackage: Cabal-3.16.0.0@sha256:7d5d80355ac02c42cb90ec575d83653139a2054ab9aac0753527ced8f343c6b3,14024
+    hackage: snap-server-1.1.2.1@sha256:3ed4373b3bc4a0f2d59752557dfa0f4caf1a198322451350b7cf6ae757b7eb42,15464
     pantry-tree:
-      sha256: 1af1de9cd20b19df20b311b2e176855068a2a09203fa20de0eed76d2b95a45f7
-      size: 12139
+      sha256: d354b1c02cc178fb404819db685ae931cb9a8437777bf9f7118858ef5ada4264
+      size: 3313
   original:
-    hackage: Cabal-3.16.0.0@sha256:7d5d80355ac02c42cb90ec575d83653139a2054ab9aac0753527ced8f343c6b3,14024
+    hackage: snap-server-1.1.2.1@sha256:3ed4373b3bc4a0f2d59752557dfa0f4caf1a198322451350b7cf6ae757b7eb42,15464
 - completed:
-    hackage: directory-1.3.9.0@sha256:2490137bb7738bd79392959458ef5f276219ea5ba8a9a56d3e0b06315c1bb917,3307
+    hackage: readable-0.3.1@sha256:13b71e63627c21447a35fe4441154410c96ba1f241cf0353692883d0eebf2085,1127
     pantry-tree:
-      sha256: cf35b0c2755674f913078c588c88fc169d928ce09f292c648af9f1dbc3167131
-      size: 3386
+      sha256: 9432879be5327e8bad08a57cbb081149f27e88a1fb8df212dccd05ae7e65aa89
+      size: 313
   original:
-    hackage: directory-1.3.9.0@sha256:2490137bb7738bd79392959458ef5f276219ea5ba8a9a56d3e0b06315c1bb917,3307
+    hackage: readable-0.3.1@sha256:13b71e63627c21447a35fe4441154410c96ba1f241cf0353692883d0eebf2085,1127
 - completed:
-    hackage: filepath-1.5.4.0@sha256:1497c2630af2dd41397905ff0dff79f842bd80a139d7c5bfba3789fc3caef02c,5144
+    hackage: text-1.2.5.0@sha256:ca9f42f21fe6d95d211f24b47f8d7952f79a3b5a476a960c18a2aaedd5771201,8183
     pantry-tree:
-      sha256: 80f5c242a0e7d1ce2bc7d7ff83d312052d37a87856529ba7878b34bdc6a97fbc
-      size: 2274
+      sha256: e2c8164c4a5cca57debade69b05ca373bb931ce501b381ff1f505aaa914c5cbd
+      size: 7395
   original:
-    hackage: filepath-1.5.4.0@sha256:1497c2630af2dd41397905ff0dff79f842bd80a139d7c5bfba3789fc3caef02c,5144
+    hackage: text-1.2.5.0
 - completed:
-    hackage: process-1.6.26.1@sha256:6def2e07c317f52f4d30c43e92f97b7bc5f7c27cb1270d386b15dce429e1180f,2947
+    hackage: parsec-3.1.18.0@sha256:dfbb9835b8abc966b6bbd34340ef5122227b4cf4480062b85ca4c4704f054f98,4535
     pantry-tree:
-      sha256: 4cdf369a03c496a02a67d6d963884ae7b57eead30407881316983394b73cdc2e
-      size: 1869
+      sha256: 48ae1440eb8eb4fecde2a724c492e830ff2bec341117164302399b417733bf70
+      size: 2810
   original:
-    hackage: process-1.6.26.1@sha256:6def2e07c317f52f4d30c43e92f97b7bc5f7c27cb1270d386b15dce429e1180f,2947
-- completed:
-    hackage: unix-2.8.7.0@sha256:da731114a8ec7106c76c7d96c2b02f1b4963cb12e360a2029f4248e22a327375,10266
-    pantry-tree:
-      sha256: 45038061c4dc273f9775ca4e117b798c512d9624e602c9ae67ff07f921871fed
-      size: 5888
-  original:
-    hackage: unix-2.8.7.0@sha256:da731114a8ec7106c76c7d96c2b02f1b4963cb12e360a2029f4248e22a327375,10266
+    hackage: parsec-3.1.18.0@sha256:dfbb9835b8abc966b6bbd34340ef5122227b4cf4480062b85ca4c4704f054f98,4535
 snapshots:
 - completed:
-    sha256: 637fb77049b25560622a224845b7acfe81a09fdb6a96a3c75997a10b651667f6
-    size: 534126
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/31.yaml
-  original: lts-16.31
+    sha256: a81fb3877c4f9031e1325eb3935122e608d80715dc16b586eb11ddbff8671ecd
+    size: 640086
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/25.yaml
+  original: lts-21.25

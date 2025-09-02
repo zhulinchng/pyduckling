@@ -14,11 +14,22 @@ import json
 from typing import List
 
 # Local imports
-from .duckling import (init, stop, load_time_zones,
-                       get_current_ref_time, parse_ref_time,
-                       parse_lang, default_locale_lang, parse_locale,
-                       parse_dimensions, parse_text, Context, Dimension,
-                       Locale, __version__)
+from .duckling import (
+    Context,
+    Dimension,
+    Locale,
+    __version__,
+    default_locale_lang,
+    get_current_ref_time,
+    init,
+    load_time_zones,
+    parse_dimensions,
+    parse_lang,
+    parse_locale,
+    parse_ref_time,
+    parse_text,
+    stop,
+)
 
 __version__
 init
@@ -38,8 +49,9 @@ Locale
 init()
 
 
-def parse(text: str, context: Context, dimensions: List[Dimension],
-          with_latent: bool = False) -> dict:
+def parse(
+    text: str, context: Context, dimensions: List[Dimension], with_latent: bool = False
+) -> dict:
     """
     Parse a text into a structured format.
 
