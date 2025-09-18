@@ -12,6 +12,6 @@ docker buildx build \
   --build-arg="ALPINE_VERSION=${ALPINE_VERSION_DUCKLING_FFI}" \
   -t "${BUILD_IMAGE_DUCKLING_FFI}" .
 
-if [[ ${PUSH_IMAGES} ]]; then
+if [[ -n "${PUSH_IMAGES:-}" ]]; then
   docker push "${BUILD_IMAGE_DUCKLING_FFI}"
 fi
